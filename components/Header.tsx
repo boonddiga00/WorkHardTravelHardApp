@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../color";
-import { styles } from "./App";
+import { styles } from "../styles";
 
 interface IHeaderProps {
   work: () => void;

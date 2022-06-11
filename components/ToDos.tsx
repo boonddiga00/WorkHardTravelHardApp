@@ -1,5 +1,6 @@
-import { Text, TouchableOpacity, View } from "react-native";
-import { IToDos, styles } from "./App";
+import { Text, TouchableOpacity, View, Alert } from "react-native";
+import { IToDos } from "../App";
+import { styles } from "../styles";
 
 interface IToDosProps {
   id: string;
@@ -10,10 +11,19 @@ interface IToDosProps {
 
 function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
   const deleteToDo = (key: string) => {
-    const newToDos = { ...toDos };
-    delete newToDos[key];
-    setToDos(newToDos);
-    saveToDo(newToDos);
+    Alert.alert("Delete ToDo", "Are you sure?", [
+      { text: "Cancle" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => {
+          const newToDos = { ...toDos };
+          delete newToDos[key];
+          setToDos(newToDos);
+          saveToDo(newToDos);
+        },
+      },
+    ]);
   };
   return (
     <View style={styles.toDo}>

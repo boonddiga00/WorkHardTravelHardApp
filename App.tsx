@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { StyleSheet, View, TextInput, ScrollView } from "react-native";
+import { View, TextInput, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { theme } from "../color";
-import Header from "./Header";
-import ToDos from "./ToDos";
+import { styles } from "./styles";
+import Header from "./components/Header";
+import ToDos from "./components/ToDos";
 
 const STORAGE_KEY = "@toDos";
 
@@ -74,41 +74,3 @@ export default function App() {
     </View>
   );
 }
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.bg,
-    paddingHorizontal: 20,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 100,
-  },
-  btnText: {
-    fontSize: 44,
-  },
-  input: {
-    backgroundColor: theme.white,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 20,
-    marginTop: 30,
-    marginBottom: 25,
-  },
-  toDo: {
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    backgroundColor: theme.toDoBg,
-    marginBottom: 10,
-    borderRadius: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  toDoText: {
-    color: theme.white,
-    fontSize: 18,
-  },
-});
