@@ -4,7 +4,7 @@ import { styles } from "../styles/styles";
 import { theme } from "../styles/color";
 import CheckBox from "./CheckBox";
 import Utilities from "./Utilities";
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 interface IToDosProps {
   id: string;
@@ -16,7 +16,6 @@ interface IToDosProps {
 function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
   const [editing, setEditing] = useState(false);
   const [editedText, setEditedText] = useState<string>(toDos[id].text);
-  const editingTextInput = useRef(null);
   const deleteToDo = (key: string) => {
     Alert.alert("Delete ToDo", "Are you sure?", [
       { text: "Cancle" },
@@ -62,7 +61,6 @@ function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
             returnKeyType="done"
             onChangeText={onChangeText}
             onSubmitEditing={editToDo}
-            ref={editingTextInput}
           />
         ) : (
           <Text
