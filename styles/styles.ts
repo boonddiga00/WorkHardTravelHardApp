@@ -36,5 +36,10 @@ export const styles = StyleSheet.create({
   toDoText: {
     color: theme.white,
     fontSize: 18,
+    marginLeft: 10,
+  },
+  passiveCheckbox: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

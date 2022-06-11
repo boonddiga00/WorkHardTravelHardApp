@@ -2,9 +2,9 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { View, TextInput, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { styles } from "./styles";
-import Header from "./components/Header";
-import ToDos from "./components/ToDos";
+import { styles } from "../styles/styles";
+import Header from "./Header";
+import ToDos from "./ToDos";
 
 const STORAGE_KEY = "@toDos";
 
@@ -15,14 +15,13 @@ export interface IToDos {
 interface IToDo {
   text: string;
   working: boolean;
+  completed: boolean;
 }
 
 export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
   const [toDos, setToDos] = useState<IToDos>({});
-  const travel = () => setWorking(false);
-  const work = () => setWorking(true);
   const onChangeText = (payload: string) => setText(payload);
   const saveToDo = async (toDos: IToDos) => {
     const toDosString = JSON.stringify(toDos);
@@ -32,7 +31,9 @@ export default function App() {
     if (text === "") {
       return;
     }
-    const newToDo = { [Date.now().toString()]: { text, working } };
+    const newToDo = {
+      [Date.now().toString()]: { text, working, completed: false },
+    };
     const newToDos = { ...toDos, ...newToDo };
     setToDos(newToDos);
     saveToDo(newToDos);
@@ -48,7 +49,7 @@ export default function App() {
   }, []);
   return (
     <View style={styles.container}>
-      <Header work={work} travel={travel} working={working} />
+      <Header setWorking={setWorking} working={working} />
       <TextInput
         style={styles.input}
         placeholder={working ? "Add a To Do" : "Where Do You Want to Go?"}

@@ -1,14 +1,15 @@
 import { Text, TouchableOpacity, View } from "react-native";
-import { theme } from "../color";
-import { styles } from "../styles";
+import { theme } from "../styles/color";
+import { styles } from "../styles/styles";
 
 interface IHeaderProps {
-  work: () => void;
-  travel: () => void;
+  setWorking: React.Dispatch<React.SetStateAction<boolean>>;
   working: boolean;
 }
 
-function Header({ work, travel, working }: IHeaderProps) {
+function Header({ setWorking, working }: IHeaderProps) {
+  const travel = () => setWorking(false);
+  const work = () => setWorking(true);
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={work}>
