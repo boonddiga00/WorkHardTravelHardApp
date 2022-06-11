@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,10 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "./color";
+
+const STORAGE_KEY = "@toDos";
 
 interface IToDos {
   [key: string]: IToDo;
@@ -26,6 +29,10 @@ export default function App() {
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload: string) => setText(payload);
+  const saveToDo = async (toDos: IToDos) => {
+    const toDosString = JSON.stringify(toDos);
+    await AsyncStorage.setItem(STORAGE_KEY, toDosString);
+  };
   const addToDo = () => {
     if (text === "") {
       return;
@@ -34,8 +41,17 @@ export default function App() {
       [Date.now()]: { text, work: working },
     });
     setToDos(newToDos);
+    saveToDo(newToDos);
     setText("");
   };
+  const getToDos = async () => {
+    const storageToDos = await AsyncStorage.getItem(STORAGE_KEY);
+    const toDosObject: IToDos = storageToDos ? JSON.parse(storageToDos) : {};
+    setToDos(toDosObject);
+  };
+  useEffect(() => {
+    getToDos();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
