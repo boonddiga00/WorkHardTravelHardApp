@@ -1,25 +1,20 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, View, TextInput, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { theme } from "./color";
+import { theme } from "../color";
+import Header from "./Header";
+import ToDos from "./ToDos";
 
 const STORAGE_KEY = "@toDos";
 
-interface IToDos {
+export interface IToDos {
   [key: string]: IToDo;
 }
 
 interface IToDo {
   text: string;
-  work: boolean;
+  working: boolean;
 }
 
 export default function App() {
@@ -37,9 +32,8 @@ export default function App() {
     if (text === "") {
       return;
     }
-    const newToDos = Object.assign({}, toDos, {
-      [Date.now()]: { text, work: working },
-    });
+    const newToDo = { [Date.now().toString()]: { text, working } };
+    const newToDos = { ...toDos, ...newToDo };
     setToDos(newToDos);
     saveToDo(newToDos);
     setText("");
@@ -54,28 +48,7 @@ export default function App() {
   }, []);
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={work}>
-          <Text
-            style={{
-              ...styles.btnText,
-              color: working ? theme.white : theme.grey,
-            }}
-          >
-            Work
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={travel}>
-          <Text
-            style={{
-              ...styles.btnText,
-              color: !working ? theme.white : theme.grey,
-            }}
-          >
-            Travel
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <Header work={work} travel={travel} working={working} />
       <TextInput
         style={styles.input}
         placeholder={working ? "Add a To Do" : "Where Do You Want to Go?"}
@@ -86,10 +59,14 @@ export default function App() {
       />
       <ScrollView>
         {Object.keys(toDos).map((key) =>
-          toDos[key].work === working ? (
-            <View style={styles.toDo} key={key}>
-              <Text style={styles.toDoText}>{toDos[key].text}</Text>
-            </View>
+          toDos[key].working === working ? (
+            <ToDos
+              key={key}
+              id={key}
+              toDos={toDos}
+              setToDos={setToDos}
+              saveToDo={saveToDo}
+            />
           ) : null
         )}
       </ScrollView>
@@ -98,7 +75,7 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.bg,
@@ -126,6 +103,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.toDoBg,
     marginBottom: 10,
     borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   toDoText: {
     color: theme.white,
