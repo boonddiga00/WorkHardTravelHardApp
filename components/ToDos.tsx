@@ -3,6 +3,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { IToDos } from "./App";
 import { styles } from "../styles/styles";
 import { theme } from "../styles/color";
+import CheckBox from "./CheckBox";
 
 interface IToDosProps {
   id: string;
@@ -12,16 +13,6 @@ interface IToDosProps {
 }
 
 function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
-  const completeToDo = async () => {
-    const newToDos = { ...toDos };
-    if (toDos[id].completed) {
-      newToDos[id].completed = false;
-    } else {
-      newToDos[id].completed = true;
-    }
-    setToDos(newToDos);
-    await saveToDo(newToDos);
-  };
   const deleteToDo = (key: string) => {
     Alert.alert("Delete ToDo", "Are you sure?", [
       { text: "Cancle" },
@@ -39,14 +30,13 @@ function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
   };
   return (
     <View style={styles.toDo}>
-      <View style={styles.passiveCheckbox}>
-        <TouchableOpacity onPress={completeToDo}>
-          {toDos[id].completed ? (
-            <Fontisto name="checkbox-active" size={18} color={theme.grey} />
-          ) : (
-            <Fontisto name="checkbox-passive" size={18} color={theme.white} />
-          )}
-        </TouchableOpacity>
+      <View style={styles.toDoContainer}>
+        <CheckBox
+          id={id}
+          toDos={toDos}
+          setToDos={setToDos}
+          saveToDo={saveToDo}
+        />
         <Text
           style={
             toDos[id].completed

@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 10,
   },
-  passiveCheckbox: {
+  toDoContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
