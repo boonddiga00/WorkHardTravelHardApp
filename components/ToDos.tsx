@@ -1,9 +1,10 @@
-import { Text, TouchableOpacity, View, Alert } from "react-native";
-import { Fontisto } from "@expo/vector-icons";
+import { Text, View, Alert, TextInput } from "react-native";
 import { IToDos } from "./App";
 import { styles } from "../styles/styles";
 import { theme } from "../styles/color";
 import CheckBox from "./CheckBox";
+import Utilities from "./Utilities";
+import { useRef, useState } from "react";
 
 interface IToDosProps {
   id: string;
@@ -13,6 +14,9 @@ interface IToDosProps {
 }
 
 function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
+  const [editing, setEditing] = useState(false);
+  const [editedText, setEditedText] = useState<string>(toDos[id].text);
+  const editingTextInput = useRef(null);
   const deleteToDo = (key: string) => {
     Alert.alert("Delete ToDo", "Are you sure?", [
       { text: "Cancle" },
@@ -28,6 +32,18 @@ function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
       },
     ]);
   };
+  const onChangeText = (payload: string) => setEditedText(payload);
+  const editToDo = () => {
+    if (toDos[id].text === editedText) {
+      setEditing(false);
+      return;
+    }
+    const newToDos = { ...toDos };
+    newToDos[id].text = editedText;
+    setToDos(newToDos);
+    saveToDo(newToDos);
+    setEditing(false);
+  };
   return (
     <View style={styles.toDo}>
       <View style={styles.toDoContainer}>
@@ -37,23 +53,34 @@ function ToDos({ id, toDos, setToDos, saveToDo }: IToDosProps) {
           setToDos={setToDos}
           saveToDo={saveToDo}
         />
-        <Text
-          style={
-            toDos[id].completed
-              ? {
-                  ...styles.toDoText,
-                  textDecorationLine: "line-through",
-                  color: theme.grey,
-                }
-              : { ...styles.toDoText }
-          }
-        >
-          {toDos[id].text}
-        </Text>
+        {editing ? (
+          <TextInput
+            style={styles.editingInput}
+            placeholder="Edit Your ToDo"
+            placeholderTextColor="white"
+            value={editedText}
+            returnKeyType="done"
+            onChangeText={onChangeText}
+            onSubmitEditing={editToDo}
+            ref={editingTextInput}
+          />
+        ) : (
+          <Text
+            style={
+              toDos[id].completed
+                ? {
+                    ...styles.toDoText,
+                    textDecorationLine: "line-through",
+                    color: theme.grey,
+                  }
+                : { ...styles.toDoText }
+            }
+          >
+            {toDos[id].text}
+          </Text>
+        )}
       </View>
-      <TouchableOpacity onPress={() => deleteToDo(id)}>
-        <Fontisto name="trash" size={20} color={theme.grey} />
-      </TouchableOpacity>
+      <Utilities id={id} deleteToDo={deleteToDo} setEditing={setEditing} />
     </View>
   );
 }

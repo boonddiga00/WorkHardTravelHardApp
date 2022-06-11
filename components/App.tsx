@@ -5,8 +5,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/styles";
 import Header from "./Header";
 import ToDos from "./ToDos";
+import { WORKING_STORAGE_KEY } from "./Header";
 
-const STORAGE_KEY = "@toDos";
+const TODO_STORAGE_KEY = "@toDos";
 
 export interface IToDos {
   [key: string]: IToDo;
@@ -25,7 +26,7 @@ export default function App() {
   const onChangeText = (payload: string) => setText(payload);
   const saveToDo = async (toDos: IToDos) => {
     const toDosString = JSON.stringify(toDos);
-    await AsyncStorage.setItem(STORAGE_KEY, toDosString);
+    await AsyncStorage.setItem(TODO_STORAGE_KEY, toDosString);
   };
   const addToDo = () => {
     if (text === "") {
@@ -40,12 +41,18 @@ export default function App() {
     setText("");
   };
   const getToDos = async () => {
-    const storageToDos = await AsyncStorage.getItem(STORAGE_KEY);
+    const storageToDos = await AsyncStorage.getItem(TODO_STORAGE_KEY);
     const toDosObject: IToDos = storageToDos ? JSON.parse(storageToDos) : {};
     setToDos(toDosObject);
   };
+  const getWorking = async () => {
+    const storageWorking = await AsyncStorage.getItem(WORKING_STORAGE_KEY);
+    const working = storageWorking != null ? JSON.parse(storageWorking) : true;
+    setWorking(working);
+  };
   useEffect(() => {
     getToDos();
+    getWorking();
   }, []);
   return (
     <View style={styles.container}>

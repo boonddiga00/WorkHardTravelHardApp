@@ -1,4 +1,8 @@
-import { StyleSheet } from "react-native";
+import {
+  StyleSheet,
+  TouchableHighlightBase,
+  TouchableWithoutFeedbackBase,
+} from "react-native";
 import { theme } from "./color";
 
 export const styles = StyleSheet.create({
@@ -41,5 +45,18 @@ export const styles = StyleSheet.create({
   toDoContainer: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  utilities: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  editingInput: {
+    backgroundColor: theme.bg,
+    fontSize: 18,
+    paddingLeft: 10,
+    marginLeft: 5,
+    width: 220,
+    color: theme.white,
+    borderRadius: 5,
   },
 });
